@@ -28,7 +28,8 @@ def create_react_agent():
     vs_query_engine = vs_index.as_query_engine()
 
     from customization.pandas_query_engine.pandas_query_engine import output_processor
-    pd_query_engine = PandasQueryEngine(pd.read_csv('data/2023院校招生章程.csv'), output_processor = output_processor)
+    adm_pd_query_engine = PandasQueryEngine(pd.read_csv('data/2023院校招生章程.csv'), output_processor = output_processor)
+    score_pd_query_engine = PandasQueryEngine(pd.read_csv('data/2022全国大学各省专业录取分数信息.csv'), output_processor = output_processor)
 
 
     # Initilized React Agent
@@ -37,14 +38,25 @@ def create_react_agent():
             query_engine=vs_query_engine,
             metadata=ToolMetadata(
                 name="knowledgebase",
-                description="2023 年甘肃省普通高等学校招生工作规定",
+                description="提供的信息包括：2023年甘肃省普通高等学校招生工作规定,云南省普通高校招生网上填报志愿考生须知，以及安徽师范大学就业质量报告",
             ),
         ),
         QueryEngineTool(
-            query_engine=pd_query_engine,
+            query_engine=adm_pd_query_engine,
             metadata=ToolMetadata(
-                name="database",
-                description="提供了2023院校招生章程的表格,给定学校名称,输出学校的章程",
+                name="regulation_database",
+                description="提供了2023年各个学校招生标准和章程。当需要查询某所大学的录取标准时，应该使用此工具",
+            ),
+        ),
+        QueryEngineTool(
+            query_engine=score_pd_query_engine,
+            metadata=ToolMetadata(
+                name="score_database",
+                description='''
+                这是一份表格，提供了2020年到2023年间，全国各省专业录取分数线。
+                输出字段有:最高分,最低分,投档线差,投档位次,专业。
+                每个大学，每个年份有很多专业，默认搜索2023年的信息，永远是选取3000条信息。
+                ''',
             ),
         ),
     ]
