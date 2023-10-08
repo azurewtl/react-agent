@@ -1,5 +1,7 @@
 import os
 import pandas as pd
+# import sys
+# sys.path.insert(0, '/Users/azure/Documents/Workspace/llama_index')
 from llama_index import (ServiceContext, StorageContext, 
                         VectorStoreIndex, SimpleDirectoryReader, load_index_from_storage)
 from llama_index.query_engine import PandasQueryEngine
@@ -53,9 +55,11 @@ def create_react_agent():
             metadata=ToolMetadata(
                 name="score_database",
                 description='''
-                这是一份表格，提供了2020年到2023年间，全国各省专业录取分数线。
+                这是一份表格，提供了2020年到2022年间，全国各省专业录取分数线。
                 输出字段有:最高分,最低分,投档线差,投档位次,专业。
                 每个大学，每个年份有很多专业，默认搜索2023年的信息，永远是选取3000条信息。
+                比如：问到清华录取分数最高的专业是什么？可以使用的Action input 如下:
+                {{"大学名称":"清华大学", "goal":"分数线最高的专业"}}
                 ''',
             ),
         ),
