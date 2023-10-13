@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大学招生问答</title>
+
+  <!-- 引入Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- 引入Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- 引入 animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <style>
+    p {
+      line-height: 1.7 !important;
+      margin-bottom: 1em !important;
+    }
+
+    p:last-child {
+      margin-bottom: 0 !important;
+    }
+
+    ul {
+      list-style: disc !important;
+    }
+
+    ol {
+      list-style: decimal !important;
+    }
+
+    ul,
+    ol {
+      margin-left: 1.5em !important;
+      margin-bottom: 1em !important;
+    }
+
+  </style>
+  <!-- 引入 markdown-it -->
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const md = window.markdownit()
+      const resultContainer = document.getElementById('result')
+
+      if (resultContainer) {
+        const markdown = resultContainer.textContent || resultContainer.innerText
+        resultContainer.innerHTML = md.render(markdown)
+      }
+    })
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // 给表单添加 submit 事件监听器
+      const form = document.querySelector('form')
+      form.addEventListener('submit', function () {
+        const button = form.querySelector('button[type="submit"]')
+        // 修改按钮的 HTML 以显示 Loading 图标
+        button.innerHTML = `
+          <i class="fas fa-spinner fa-spin"></i>
+          <span class="ml-2">思考中...</span>
+        `
+      })
+    });
+  </script>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+  <div class="container mx-auto p-5 md:p-10 max-w-2xl">
+    <div class="header text-center mb-5 animate__animated animate__fadeIn">
+      <h1 class="text-4xl font-bold">大学招生问答</h1>
+    </div>
+    <form method="POST" class="bg-white p-5 rounded-lg shadow-lg animate__animated animate__fadeInUp">
+      <label for="question" class="text-xl">问我些大学招生问题：</label>
+      <div class="mt-3 mb-5 relative">
+        <i class="fas fa-question-circle absolute top-3 left-3 text-xl text-gray-400"></i>
+        <textarea name="question" id="question" rows="2"
+          class="pl-10 pr-3 py-2 w-full border rounded-lg">北京工商大学的章程中，录取标准是什么</textarea>
+      </div>
+      <button type="submit"
+        class="bg-blue-500 text-white px-5 py-2 rounded-lg cursor-pointer hover:bg-blue-600 transition-all">
+        询问
+      </button>
+    </form>
+    {% if result is defined %}
+    <div class="mt-10 animate__animated animate__fadeInUp">
+      <h2 class="text-2xl font-bold">回答</h2>
+      <div id="result" class="mt-3 bg-white p-5 rounded-lg shadow-lg">{{ result.response }}</div>
+    </div>
+    {% endif %}
+  </div>
+</body>
+
+</html>

@@ -1,6 +1,5 @@
 """ReAct output parser."""
 
-
 from llama_index.output_parsers.utils import extract_json_str
 from llama_index.types import BaseOutputParser
 from typing import Tuple
@@ -20,13 +19,11 @@ def extract_tool_use(input_text: str) -> Tuple[str, str, str]:
 
     match = re.search(pattern, input_text, re.DOTALL)
     if not match:
-        raise ValueError(
-            "Could not extract tool use from input text: {}".format(input_text)
-        )
+        raise ValueError(f"Could not extract tool use from input text: {input_text}")
 
-    thought = match.group(1).strip()
-    action = match.group(2).strip()
-    action_input = match.group(3).strip()
+    thought = match[1].strip()
+    action = match[2].strip()
+    action_input = match[3].strip()
     return thought, action, action_input
 
 
@@ -35,12 +32,10 @@ def extract_final_response(input_text: str) -> Tuple[str, str]:
 
     match = re.search(pattern, input_text, re.DOTALL)
     if not match:
-        raise ValueError(
-            "Could not extract final answer from input text: {}".format(input_text)
-        )
+        raise ValueError(f"Could not extract final answer from input text: {input_text}")
 
-    thought = match.group(1).strip()
-    answer = match.group(2).strip()
+    thought = match[1].strip()
+    answer = match[2].strip()
     return thought, answer
 
 
@@ -66,9 +61,7 @@ class ReActOutputParser(BaseOutputParser):
         if "Thought:" not in output:
             # NOTE: handle the case where the agent directly outputs the answer
             # instead of following the thought-answer format
-            return ResponseReasoningStep(
-                thought="I can answer without any tools.", response=output
-            )
+            return ResponseReasoningStep(thought="I can answer without any tools.", response=output)
 
         if "Answer:" in output:
             thought, answer = extract_final_response(output)
@@ -84,11 +77,9 @@ class ReActOutputParser(BaseOutputParser):
             except json.JSONDecodeError:
                 action_input_dict = ast.literal_eval(json_str)
 
-            return ActionReasoningStep(
-                thought=thought, action=action, action_input=action_input_dict
-            )
+            return ActionReasoningStep(thought=thought, action=action, action_input=action_input_dict)
 
-        raise ValueError("Could not parse output: {}".format(output))
+        raise ValueError(f"Could not parse output: {output}")
 
     def format(self, output: str) -> str:
         """Format a query with structured output formatting instructions."""

@@ -7,21 +7,17 @@ import pandas as pd
 logger = logging.getLogger(__name__)
 
 
-def output_processor(
-    output: str, df: pd.DataFrame, **output_kwargs: Any
-) -> str:
+def output_processor(output: str, df: pd.DataFrame, **output_kwargs: Any) -> str:
     """Process outputs in a default manner."""
     import ast
     import sys
     import traceback
 
     if sys.version_info < (3, 9):
-        logger.warn(
-            "Python version must be >= 3.9 in order to use "
-            "the default output processor, which executes "
-            "the Python query. Instead, we will return the "
-            "raw Python instructions as a string."
-        )
+        logger.warn("Python version must be >= 3.9 in order to use "
+                    "the default output processor, which executes "
+                    "the Python query. Instead, we will return the "
+                    "raw Python instructions as a string.")
         return output
 
     local_vars = {"df": df}

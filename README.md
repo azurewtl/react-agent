@@ -1,6 +1,6 @@
 # 安装依赖
 ```shell
-pip install -r requirement.txt
+pip install -r requirements.txt
 ```
 第一次执行可能还需要下载huggingface的embedding model
 
